@@ -1,0 +1,22 @@
+name: CD Simple image
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and push
+      uses: docker/build-push-action@v1.1.0
+      with:
+        username: ${{secrets.DOCKERHUB_USER}}
+        password: ${{secrets.DOCKERHUB_PASSWD}}
+        repository: ${{secrets.DOCKERHUB_USER}}/simple-docker-image
+        tags: ${{github.sha}}, latest
