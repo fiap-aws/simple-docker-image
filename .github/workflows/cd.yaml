@@ -20,3 +20,14 @@ jobs:
         password: ${{secrets.DOCKERHUB_PASSWD}}
         repository: ${{secrets.DOCKERHUB_USER}}/simple-docker-image
         tags: ${{github.sha}}, latest
+    
+    - name: Configure AWS Creds
+      id: configure-aws-creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - run: aws ecs update-service --cluster ${{vars.ECS_CLUSTER_NAME}} --service ${{vars.ECS_SERVICE_NAME}} --force-new-deployment
+      shell: bash
